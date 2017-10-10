@@ -9,16 +9,27 @@ public:
 
 	unsigned long long find_place(size_t size);
 	void file_inserted(unsigned long long start_at, size_t size);
-	void file_removed(unsigned long long strat_at, size_t size);
+	void file_removed(unsigned long long start_at, size_t size);
 
 private:
 	file& file_;
 
 	struct hole
 	{
-		unsigned long long start;
+		unsigned long long position;
 		size_t size;
 	};
 
-	std::multimap<size_t, unsigned long long> hole_; //1 - size of the hole, 2 - starting position in the file
+	struct by_size {};
+	struct by_pos {};
+
+	mi::multi_index_container<
+		hole,
+		mi::indexed_by<
+			mi::ordered_non_unique<mi::tag<by_size>, mi::member<hole, size_t, &hole::size>>,
+			mi::ordered_unique<mi::tag<by_pos>, mi::member<hole, unsigned long long, &hole::position>>
+		>
+	> holes_;
+
+	unsigned long long last_place_;
 };
