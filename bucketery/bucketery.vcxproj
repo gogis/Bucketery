@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="file.h" />
     <ClInclude Include="hole_manager.h" />
+    <ClInclude Include="indexer.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="storage.h" />
     <ClInclude Include="win.h" />
@@ -20,6 +21,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="hole_manager.cpp" />
+    <ClCompile Include="indexer.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
