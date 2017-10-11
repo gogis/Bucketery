@@ -1,6 +1,7 @@
 #pragma once
 
 #include "file.h"
+#include "hole_manager.h"
 
 class storage
 {
