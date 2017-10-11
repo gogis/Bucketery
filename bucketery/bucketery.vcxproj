@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="constants.h" />
     <ClInclude Include="file.h" />
     <ClInclude Include="hole_manager.h" />
     <ClInclude Include="indexer.h" />
