@@ -8,8 +8,24 @@
 
 BOOST_AUTO_TEST_CASE(hole_manager_test)
 {
-	int i = 1;
-	BOOST_TEST(i == 2);
+	hole_manager hm;
+	auto pos1 = hm.insert(100);
+	auto pos2 = hm.insert(100);
+	auto pos3 = hm.insert(100);
+
+	hm.remove(pos2, 100);
+	pos2 = hm.insert(100);
+	BOOST_TEST(pos2 == 100);
+
+	hm.remove(pos2, 100);
+	hm.remove(pos3, 100);
+	pos2 = hm.insert(100);
+	BOOST_TEST(pos2 == 100);
+
+	hm.remove(0, 100);
+	hm.remove(100, 100);
+	pos1 = hm.insert(100);
+	BOOST_TEST(pos1 == 0);
 }
 
 BOOST_AUTO_TEST_CASE(do_pause)

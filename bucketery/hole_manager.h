@@ -5,7 +5,7 @@
 class hole_manager
 {
 public:
-	hole_manager(file& file_storage);
+	hole_manager();
 
 	class reservation
 	{
@@ -34,8 +34,6 @@ public:
 	void remove(unsigned long long start_at, size_t size);
 
 private:
-	file& file_;
-
 	struct hole
 	{
 		unsigned long long position;
