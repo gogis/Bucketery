@@ -4,11 +4,6 @@
 
 #include "constants.h"
 
-bool indexer::index_page_header::operator()(indexer::index_page_header const& l, indexer::index_page_header const& r)
-{
-	return l.minid < r.minid;
-}
-
 indexer::indexer(file& file_storage, hole_manager& hm, std::optional<unsigned long long>& index_header_pos) : file_(file_storage), hm_(hm)
 {
 	if (!index_header_pos)
@@ -81,9 +76,43 @@ void indexer::get_page_data_placement(std::vector<index_item> items_data, index_
 		hm_.data_present(item.pos, item.size);
 }
 
-void indexer::set_item(unsigned long long /*id*/, unsigned long long /*pos*/, size_t /*size*/)
+indexer::page_set::iterator indexer::find_page(unsigned long long id)
 {
+	assert(id != 0);
 
+	auto found_page = --pages_.upper_bound(id);
+	return found_page;
+}
+
+std::vector<indexer::index_item> indexer::load_page(indexer::page_set::iterator page)
+{
+	std::vector<index_item> page_data;
+	page_data.resize(page->no_of_items);
+
+	file_.read_raw(&page_data[0], page->position, sizeof(index_item) * page->no_of_items);
+	return page_data;
+}
+
+std::vector<indexer::index_item>::iterator indexer::find_item(std::vector<indexer::index_item>& data, unsigned long long id)
+{
+	std::function<unsigned long long(index_item&)> deref = [](index_item& item) {return item.id; };
+	auto it1 = boost::make_transform_iterator(data.begin(), deref);
+	auto it2 = boost::make_transform_iterator(data.end(), deref);
+	return std::lower_bound(it1, it2, id).base();
+}
+
+void indexer::set_item(unsigned long long id, unsigned long long /*pos*/, size_t /*size*/)
+{
+	auto page_info = find_page(id);
+	auto page_data = load_page(page_info);
+	auto item = find_item(page_data, id);
+
+	if (item->id == id)
+	{
+	}
+	else
+	{
+	}
 }
 
 void indexer::remove_item(unsigned long long /*id*/)

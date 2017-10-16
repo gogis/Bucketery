@@ -34,14 +34,21 @@ private:
 		unsigned long long next_index_page;
 		unsigned long long position;
 		size_t no_of_items;
-
-		bool operator()(index_page_header const& l, index_page_header const& r);//comparator for std::set
 	};
 
-	void get_page_data_placement(std::vector<index_item> vec, index_page_header& iph);
+	typedef boost::multi_index_container<
+		index_page_header,
+		boost::multi_index::indexed_by<
+		boost::multi_index::ordered_unique<boost::multi_index::member<index_page_header, unsigned long long, &index_page_header::minid>>
+		>
+	> page_set;
+	page_set pages_;
 
-private:
-	std::set<index_page_header, index_page_header> pages_;
+	page_set::iterator find_page(unsigned long long id);
+	std::vector<index_item> load_page(page_set::iterator page);
+	std::vector<index_item>::iterator find_item(std::vector<index_item>& data, unsigned long long id);
+
+	void get_page_data_placement(std::vector<index_item> vec, index_page_header& iph);
 
 	hole_manager& hm_;
 	file& file_;

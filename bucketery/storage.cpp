@@ -35,7 +35,7 @@ storage::storage(std::wstring const& file_name) : file_(file_name)
 	else
 	{
 		file_.read(header, 0);
-		if (header.sign[0] != L'B' || header.sign[1] != L'u' || header.sign[2] != L'c' || header[3] != L'k')
+		if (header.sign[0] != L'B' || header.sign[1] != L'u' || header.sign[2] != L'c' || header.sign[3] != L'k')
 			throw std::runtime_error("Invalid data file specified");
 
 		if (header.version_maj != ver_maj || header.version_min != ver_min)
