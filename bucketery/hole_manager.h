@@ -13,10 +13,11 @@ public:
 
 		reservation(reservation const&) = delete;
 		void operator=(reservation const&) = delete;
-	private:
-		reservation(hole_manager& hm, size_t size);
+
+		class constructor_tag {}; //to be able to create reservation object only within hole_manager
 
 	public:
+		reservation(constructor_tag, hole_manager& hm, size_t size);
 		~reservation();
 
 		unsigned long long start();
@@ -29,8 +30,24 @@ public:
 		bool filled_;
 	};
 
-	reservation&& reserve(size_t size);
-	unsigned long long  insert(size_t size);
+	std::unique_ptr<reservation> reserve(size_t size);
+	template <class T> std::unique_ptr<reservation> reserve()
+	{
+		return reserve(sizeof(T));
+	}
+
+	unsigned long long insert(size_t size);
+	template <class T> unsigned long long insert()
+	{
+		return insert(sizeof(T));
+	}
+
+	void data_present(unsigned long long pos, size_t size);
+	template <class T> void data_present(unsigned long long pos)
+	{
+		data_present(pos, sizeof(T));
+	}
+
 	void remove(unsigned long long start_at, size_t size);
 
 private:

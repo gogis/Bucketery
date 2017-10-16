@@ -4,6 +4,8 @@
 #include <string>
 #include <mutex>
 #include <map>
+#include <set>
+#include <optional>
 
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/member.hpp>

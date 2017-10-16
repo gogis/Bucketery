@@ -1,17 +1,18 @@
 #pragma once
 
-class file
+class system_file
 {
 public:
-	file(std::wstring const& file_name);
-	~file();
+	system_file(std::wstring const& file_name);
+	~system_file();
 
-	void read(void* data, size_t start, size_t size);
-	void write(void const* data, size_t start, size_t size);
+	void read_raw(void* data, unsigned long long start, size_t size);
+	void write_raw(void const* data, unsigned long long start, size_t size);
+
+	unsigned long long get_size();
 
 	void flush();
 
 private:
 	HANDLE file_handle_;
-	std::mutex file_lock_;
 };
