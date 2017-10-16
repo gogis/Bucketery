@@ -52,6 +52,7 @@ indexer::indexer(file& file_storage, hole_manager& hm, std::optional<unsigned lo
 		hm_.data_present<index_page_header>(header_.first_index_page);
 		file_.read(page_header, header_.first_index_page);
 		pages_.insert(page_header);
+		hm_.data_present(page_header.position, sizeof(index_item) * page_header.no_of_items);
 		get_page_data_placement(items_data, page_header);
 
 		while (page_header.next_index_page != 0)
@@ -59,6 +60,7 @@ indexer::indexer(file& file_storage, hole_manager& hm, std::optional<unsigned lo
 			hm_.data_present<index_page_header>(page_header.next_index_page);
 			file_.read(page_header, page_header.next_index_page);
 			pages_.insert(page_header);
+			hm_.data_present(page_header.position, sizeof(index_item) * page_header.no_of_items);
 			get_page_data_placement(items_data, page_header);
 		}
 	}
@@ -81,6 +83,7 @@ void indexer::get_page_data_placement(std::vector<index_item> items_data, index_
 
 void indexer::set_item(unsigned long long /*id*/, unsigned long long /*pos*/, size_t /*size*/)
 {
+
 }
 
 void indexer::remove_item(unsigned long long /*id*/)

@@ -14,18 +14,23 @@ BOOST_AUTO_TEST_CASE(hole_manager_test)
 	auto pos3 = hm.insert(100);
 
 	hm.remove(pos2, 100);
-	pos2 = hm.insert(100);
-	BOOST_TEST(pos2 == 100);
+	auto new_pos = hm.insert(100);
+	BOOST_TEST(pos2 == new_pos);
 
 	hm.remove(pos2, 100);
 	hm.remove(pos3, 100);
-	pos2 = hm.insert(100);
-	BOOST_TEST(pos2 == 100);
+	new_pos = hm.insert(100);
+	BOOST_TEST(pos2 == new_pos);
 
-	hm.remove(0, 100);
-	hm.remove(100, 100);
-	pos1 = hm.insert(100);
-	BOOST_TEST(pos1 == 0);
+	hm.remove(pos2, 100);
+	hm.remove(pos1, 100);
+	new_pos = hm.insert(100);
+	BOOST_TEST(pos1 == new_pos);
+}
+
+BOOST_AUTO_TEST_CASE(indexer_startup)
+{
+	storage s(L"d:/useless.buf");
 }
 
 BOOST_AUTO_TEST_CASE(do_pause)

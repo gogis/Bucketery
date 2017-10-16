@@ -27,7 +27,8 @@ void system_file::read_raw(void* data, unsigned long long start, size_t size)
 	if (res == 0)
 		throw std::system_error(GetLastError(), std::system_category());
 
-	res = ReadFileEx(file_handle_, data, static_cast<DWORD>(size), NULL, NULL);
+	DWORD dwSize = static_cast<DWORD>(size);
+	res = ReadFile(file_handle_, data, dwSize, &dwSize, NULL);
 	if (res == 0)
 		throw std::system_error(GetLastError(), std::system_category());
 }
@@ -58,7 +59,9 @@ void system_file::flush()
 
 unsigned long long system_file::get_size()
 {
-	return 0;
+	LARGE_INTEGER li;
+	GetFileSizeEx(file_handle_, &li);
+	return li.QuadPart;
 }
 
 #endif

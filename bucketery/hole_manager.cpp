@@ -46,16 +46,16 @@ void hole_manager::data_present(unsigned long long pos, size_t size)
 
 	if (pos > last_place_)
 	{
-		hole new_hole{ last_place_, pos - last_place_ + actual_size };
+		hole new_hole{ last_place_, pos - last_place_};
 		holes_.insert(new_hole);
 		last_place_ = pos + actual_size;
 		return;
 	};
 
 	auto found_hole = holes_.get<by_pos>().lower_bound(pos);
-	assert(found_hole != holes_.get<by_pos>().end()); //There is no hole in that data region
-	
-	if (found_hole->position == pos)
+	hole found_hole_data = *found_hole;
+
+	if (found_hole != holes_.get<by_pos>().end() && found_hole->position == pos)
 	{
 		assert(found_hole->size >= actual_size); //Hole in the specified place is too small
 
@@ -74,14 +74,15 @@ void hole_manager::data_present(unsigned long long pos, size_t size)
 	assert(found_hole != holes_.get<by_pos>().begin()); //There is no hole in that data region
 
 	--found_hole;
+	found_hole_data = *found_hole;
 
-	assert(found_hole->position <= pos && found_hole->position + found_hole->size >= pos + size); //There is no hole in that region
+	assert(found_hole->position <= pos && found_hole->position + found_hole->size >= pos + actual_size); //There is no hole in that region
 
 	hole new_left_hole{ found_hole->position, pos - found_hole->position };
 	std::optional<hole> new_right_hole;
 
-	if (pos + size < found_hole->position + found_hole->size)
-		new_right_hole = { pos + size, found_hole->position + found_hole->size - pos - size };
+	if (pos + actual_size < found_hole->position + found_hole->size)
+		new_right_hole = { pos + actual_size, found_hole->position + found_hole->size - pos - actual_size };
 
 	holes_.get<by_pos>().erase(found_hole);
 	holes_.insert(new_left_hole);

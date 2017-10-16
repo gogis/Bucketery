@@ -1,6 +1,7 @@
 #pragma once
 
 #include "file.h"
+#include "indexer.h"
 #include "hole_manager.h"
 
 class storage
@@ -36,4 +37,6 @@ public:
 
 private:
 	file file_;
+	hole_manager hm_;
+	std::unique_ptr<indexer> index_;
 };
