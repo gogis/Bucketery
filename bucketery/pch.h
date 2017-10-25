@@ -1,11 +1,14 @@
 #pragma once
 
-//#include <cstdio>
+#define NOMINMAX
+
 #include <string>
 #include <mutex>
 #include <map>
 #include <set>
 #include <optional>
+#include <iterator>
+#include <sstream>
 
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/member.hpp>

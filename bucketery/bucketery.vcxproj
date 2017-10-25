@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="bucketery.h" />
     <ClInclude Include="constants.h" />
+    <ClInclude Include="errors.h" />
     <ClInclude Include="file.h" />
     <ClInclude Include="hole_manager.h" />
     <ClInclude Include="indexer.h" />

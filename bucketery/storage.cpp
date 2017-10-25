@@ -3,6 +3,7 @@
 #include "storage.h"
 
 #include "constants.h"
+#include "errors.h"
 
 storage::storage(std::wstring const& file_name) : file_(file_name)
 {
@@ -36,10 +37,10 @@ storage::storage(std::wstring const& file_name) : file_(file_name)
 	{
 		file_.read(header, 0);
 		if (header.sign[0] != L'B' || header.sign[1] != L'u' || header.sign[2] != L'c' || header.sign[3] != L'k')
-			throw std::runtime_error("Invalid data file specified");
+			throw invalid_data_file();
 
 		if (header.version_maj != ver_maj || header.version_min != ver_min)
-			throw std::runtime_error("Invalid data file version");
+			throw invalid_data_file_version();
 
 		std::optional<unsigned long long> index_header_pos = header.index_header_pos;
 		index_ = std::make_unique<indexer>(file_, hm_, index_header_pos);

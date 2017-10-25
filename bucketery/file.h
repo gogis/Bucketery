@@ -7,7 +7,7 @@
 class file : public system_file
 {
 public:
-	file(std::wstring const& file_name) : system_file(file_name) {}
+	explicit file(std::wstring const& file_name) : system_file(file_name) {}
 
 	template <class T>
 	void read(T& data, unsigned long long start)

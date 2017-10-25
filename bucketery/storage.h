@@ -7,7 +7,7 @@
 class storage
 {
 public:
-	storage(std::wstring const& file_name);
+	explicit storage(std::wstring const& file_name);
 	~storage();
 
 	unsigned long long save_data(void const* data, size_t size);
