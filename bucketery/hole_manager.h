@@ -21,7 +21,7 @@ public:
 		~reservation();
 
 		unsigned long long start();
-		void filled();
+		void filled() throw();
 
 	private:
 		hole_manager& hm_;
@@ -33,19 +33,35 @@ public:
 	std::unique_ptr<reservation> reserve(size_t size);
 	template <class T> std::unique_ptr<reservation> reserve()
 	{
+		static_assert(std::is_pod<T>::value);
 		return reserve(sizeof(T));
 	}
 
-	unsigned long long insert(size_t size);
-	template <class T> unsigned long long insert()
+	template <class T> std::unique_ptr<reservation> reserve(std::vector<T>& data)
 	{
-		return insert(sizeof(T));
+		static_assert(std::is_pod<T>::value);
+		return reserve(data.size() * sizeof(T));
+	}
+
+	template<class It, typename = std::enable_if<std::is_same<typename It::iterator_category, std::random_access_iterator_tag>::value, int>::type>
+	std::unique_ptr<reservation> reserve(It it1, It it2)
+	{
+		static_assert(std::is_pod<It::value_type>::value);
+		return reserve(sizeof(It::value_type) * std::distance(it1, it2));
+	}
+
+	unsigned long long insert(size_t size);
+	template <class T> unsigned long long insert(size_t number = 1)
+	{
+		static_assert(std::is_pod<T>::value);
+		return insert(sizeof(T) * number);
 	}
 
 	void data_present(unsigned long long pos, size_t size);
-	template <class T> void data_present(unsigned long long pos)
+	template <class T> void data_present(unsigned long long pos, size_t number = 1)
 	{
-		data_present(pos, sizeof(T));
+		static_assert(std::is_pod<T>::value);
+		data_present(pos, sizeof(T) * number);
 	}
 
 	void remove(unsigned long long start_at, size_t size);

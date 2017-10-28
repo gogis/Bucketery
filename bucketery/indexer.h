@@ -20,11 +20,13 @@ public:
 	void remove_item(unsigned long long id);
 	index_item get_item(unsigned long long id);
 
+	unsigned long long get_new_id();
+
 private:
 	struct index_header
 	{
 		unsigned long long first_index_page;
-		unsigned long long last_used_id;
+		unsigned long long new_id;
 	} header_;
 
 	struct index_page_header
@@ -49,7 +51,7 @@ private:
 	std::vector<index_item> load_page_data_info(page_set::iterator page);
 	std::vector<index_item>::iterator find_item(std::vector<index_item>& data, unsigned long long id);
 
-//	void update_page_info(page_set::iterator page_info);
+	void update_page_data(page_set::iterator page_info, std::vector<index_item>& new_data);
 	unsigned long long get_page_header_position(page_set::iterator page);
 	void update_page_data_info(std::vector<index_item>& data, size_t start_element);
 
@@ -57,4 +59,5 @@ private:
 
 	hole_manager& hm_;
 	file& file_;
+	unsigned long long index_header_pos_;
 };

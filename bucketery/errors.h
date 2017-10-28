@@ -14,3 +14,8 @@ struct invalid_data_file_version : public std::runtime_error
 {
 	invalid_data_file_version() : std::runtime_error("Invalid data file version") {}
 };
+
+struct not_enough_data : public std::runtime_error
+{
+	not_enough_data() : std::runtime_error("More data requested than present") {}
+};

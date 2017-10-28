@@ -5,6 +5,7 @@
 #include "constants.h"
 #include "errors.h"
 
+
 storage::storage(std::wstring const& file_name) : file_(file_name)
 {
 	struct storage_header
@@ -51,24 +52,41 @@ storage::~storage()
 {
 }
 
-unsigned long long storage::save_data(void const* /*data*/, size_t /*size*/)
+unsigned long long storage::save_data(void const* data, size_t size)
 {
-	return 0;
+	auto id = index_->get_new_id();
+	save_data(id, data, size);
+	return id;
 }
 
-void storage::save_data(unsigned long long /*data_id*/, void const* /*data*/, size_t /*size*/)
+void storage::save_data(unsigned long long data_id, void const* data, size_t size)
 {
+	auto reserve = hm_.reserve(size);
+	file_.write_raw(data, reserve->start(), size);
+	index_->set_item(data_id, reserve->start(), size);
+	reserve->filled();
+	file_.flush();
 }
 
-void storage::load_data(unsigned long long /*data_id*/, void* /*data*/, size_t /*size*/, size_t /*start_at*/)
+void storage::load_data(unsigned long long data_id, void* data, size_t size, size_t start_at)
 {
+	if (size == 0)
+		return;
+
+	auto item_info = index_->get_item(data_id);
+
+	if (start_at > item_info.size || item_info.size - start_at < size)
+		throw not_enough_data();
+
+	file_.read_raw(data, item_info.pos + start_at, size);
 }
 
-size_t storage::get_data_size(unsigned long long /*data_id*/)
+size_t storage::get_data_size(unsigned long long data_id)
 {
-	return 0;
+	return index_->get_item(data_id).size;
 }
 
-void storage::delete_data(unsigned long long /*data_id*/)
+void storage::delete_data(unsigned long long data_id)
 {
+	index_->remove_item(data_id);
 }

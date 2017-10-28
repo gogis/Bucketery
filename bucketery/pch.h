@@ -8,7 +8,9 @@
 #include <set>
 #include <optional>
 #include <iterator>
+#include <type_traits>
 #include <sstream>
+#include <memory>
 
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/member.hpp>
