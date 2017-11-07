@@ -19,3 +19,13 @@ struct not_enough_data : public std::runtime_error
 {
 	not_enough_data() : std::runtime_error("More data requested than present") {}
 };
+
+struct data_file_corrupted : public std::runtime_error
+{
+	data_file_corrupted(): std::runtime_error("Data file is corrupted") {}
+};
+
+struct buffer_not_large_enough : public std::runtime_error
+{
+	buffer_not_large_enough() : std::runtime_error("Provided buffer is smaller than the size of data requested") {}
+};
